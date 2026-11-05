@@ -1,0 +1,45 @@
+# Tự động đóng gói Kho Văn Bản cho Windows.
+# Chạy khi đẩy mã lên nhánh main, khi tạo tag dạng v1.1.0, hoặc bấm "Run workflow" trong tab Actions.
+name: Đóng gói cho Windows
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm test
+      - name: Đóng gói (bộ cài x64, bộ cài ARM64, bản chạy trực tiếp)
+        run: npx electron-builder --win --publish never
+      - name: Tải lên bộ cài
+        uses: actions/upload-artifact@v4
+        with:
+          name: KhoVanBan-Windows
+          path: dist/*.exe
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: windows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: KhoVanBan-Windows
+          path: out
+      - name: Tạo bản phát hành
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.exe
