@@ -1,0 +1,96 @@
+{
+  "name": "kho-van-ban",
+  "productName": "Kho Văn Bản",
+  "version": "1.1.0",
+  "description": "Ứng dụng lưu trữ, sắp xếp thư mục và tra cứu văn bản mọi định dạng trên máy tính.",
+  "main": "src/main.js",
+  "author": "Kho Văn Bản",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/store.test.js",
+    "dist": "electron-builder --win",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "vn.khovanban.app",
+    "productName": "Kho Văn Bản",
+    "artifactName": "KhoVanBan-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.png",
+      "build/icon.ico",
+      "package.json"
+    ],
+    "win": {
+      "executableName": "KhoVanBan",
+      "icon": "build/icon.ico",
+      "requestedExecutionLevel": "asInvoker",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": [
+        "vi_VN"
+      ],
+      "language": "1066",
+      "include": "build/installer.nsh",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Kho Văn Bản",
+      "uninstallDisplayName": "Kho Văn Bản",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "KhoVanBan-Setup-${version}-${arch}.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icon.png",
+      "category": "Office",
+      "maintainer": "Kho Van Ban"
+    },
+    "compression": "maximum",
+    "portable": {
+      "artifactName": "KhoVanBan-Portable-${version}.${ext}"
+    }
+  }
+}
